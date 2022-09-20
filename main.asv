@@ -1,4 +1,4 @@
-%clear all;
+clear all;
 
 encoderBlock = @(block) [
     convolution2dLayer(3,2^(5+block),"Padding",'same')
