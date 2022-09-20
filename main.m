@@ -20,6 +20,8 @@ decoder = blockedNetwork(decoderBlock,4,"NamePrefix","decoder_");
 
 %Create the bridge layers.
 
+
+
 bridge = [
     convolution2dLayer(3,1024,"Padding",'same')
     reluLayer
