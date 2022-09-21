@@ -1,4 +1,4 @@
-clear all;
+%clear all;
 
 encoderBlock = @(block) [
     convolution2dLayer(3,2^(5+block),"Padding",'same')
@@ -18,8 +18,9 @@ decoderBlock = @(block) [
     reluLayer];
 decoder = blockedNetwork(decoderBlock,4,"NamePrefix","decoder_");
 
-%Create the bridge layers.
 
+
+%Create the bridge layers.
 bridge = [
     convolution2dLayer(3,1024,"Padding",'same')
     reluLayer
@@ -36,6 +37,9 @@ inputSize = [224 224 3];
 unet = encoderDecoderNetwork(inputSize,encoder,decoder, ...
     "OutputChannels",3, ...
     "SkipConnections","concatenate", ...
-    "LatentNetwork",bridge)
+    "LatentNetwork",bridge)   %LatentNetwork — Network connecting encoder and decoder specified as a layer or array of layers.
+%If you specify the 'OutputChannels' argument, then the final network is connected after the final 1-by-1 convolution layer of the decoder
+
+
 
 analyzeNetwork(unet)
