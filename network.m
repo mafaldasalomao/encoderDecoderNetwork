@@ -1,4 +1,4 @@
-%clear all;
+clear all;
 %in this case the block to be increase the filter under 2^5+indexblock
 %the first filter size is 64, second 128 etc
 % convolution2dLayer(filterSize,numFilters)
@@ -33,16 +33,25 @@ bridge = [
 %Specify the network input size.
 
 inputSize = [224 224 3];
-
+finalLayers = [
+    convolution2dLayer(1,12)
+    depthToSpace2dLayer(2)];
 %Create the U-Net network by connecting the encoder module, bridge, and decoder module and adding skip connections.
 
 unet = encoderDecoderNetwork(inputSize,encoder,decoder, ...
     "OutputChannels",3, ...
     "SkipConnections","concatenate", ...
-    "LatentNetwork",bridge)   %LatentNetwork — Network connecting encoder and decoder specified as a layer or array of layers.
+    "LatentNetwork",bridge,...
+    "FinalNetwork", finalLayers)   %LatentNetwork — Network connecting encoder and decoder specified as a layer or array of layers.
 %If you specify the 'OutputChannels' argument, then the final network is connected after the final 1-by-1 convolution layer of the decoder
 %Number of output channels of the decoder network, specified as a positive integer. If you specify this argument, then the final layer of the decoder performs a 1-by-1 convolution operation with the specified number of channels.
 %SkipConnectionNames — Names of pairs of encoder/decoder layers
 %
+finalLayerName = net.Layers(end).Name;
 
+
+% lossLayer = ssimLossLayerGray;
+% net = addLayers(net,lossLayer);
+% net = connectLayers(net,finalLayerName,lossLayer.Name);
+% net = connectLayers(net,finalLayerName);
 %analyzeNetwork(unet)
